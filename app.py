@@ -5,48 +5,61 @@ st.set_page_config(page_title="Калькулятор экскурсии", page_
 
 st.title("🚌 Расчет экскурсии")
 
+# Вспомогательная функция для идеального мобильного ввода
+def get_number(label):
+    # Используем text_input, чтобы поле было пустым, без лишних нулей и без кнопок +/-
+    val = st.text_input(label, value="", placeholder=" ")
+    if val:
+        try:
+            # Автоматически меняем запятую на точку и убираем случайные пробелы
+            return float(val.replace(',', '.').replace(' ', ''))
+        except ValueError:
+            st.error(f"Пожалуйста, введите корректное число в поле '{label}'")
+            return 0.0
+    return 0.0
+
 # Создаем 3 удобные вкладки для навигации на телефоне
 tab1, tab2, tab3 = st.tabs(["Общие расходы", "Сопровождающие", "На ребенка"])
 
 with tab1:
     st.subheader("Базовые расходы")
-    bus = st.number_input("Автобус:", min_value=0.0, format="%.2f")
-    suburb = st.number_input("Пригород:", min_value=0.0, format="%.2f")
-    quest = st.number_input("Квест:", min_value=0.0, format="%.2f")
-    add_exp_1 = st.number_input("Доп. расходы 1:", min_value=0.0, format="%.2f")
-    add_exp_2 = st.number_input("Доп. расходы 2:", min_value=0.0, format="%.2f")
-    add_exp_3 = st.number_input("Доп. расходы 3:", min_value=0.0, format="%.2f")
+    bus = get_number("Автобус:")
+    suburb = get_number("Пригород:")
+    quest = get_number("Квест:")
+    add_exp_1 = get_number("Доп. расходы 1:")
+    add_exp_2 = get_number("Доп. расходы 2:")
+    add_exp_3 = get_number("Доп. расходы 3:")
 
     st.subheader("Экскурсионное обслуживание")
-    group_count = st.number_input("Количество групп:", min_value=0, step=1)
-    exc_m1 = st.number_input("Музей 1 (на группу):", min_value=0.0, format="%.2f")
-    exc_m2 = st.number_input("Музей 2 (на группу):", min_value=0.0, format="%.2f")
-    exc_park = st.number_input("Парк (на группу):", min_value=0.0, format="%.2f")
+    group_count = get_number("Количество групп:")
+    exc_m1 = get_number("Музей 1 (на группу):")
+    exc_m2 = get_number("Музей 2 (на группу):")
+    exc_park = get_number("Парк (на группу):")
 
 with tab2:
     st.subheader("Расходы на сопровождающих")
-    adults_count = st.number_input("Кол-во сопровождающих:", min_value=0, step=1)
-    a_m1 = st.number_input("Музей 1 (сопров-е):", min_value=0.0, format="%.2f")
-    a_m2 = st.number_input("Музей 2 (сопров-е):", min_value=0.0, format="%.2f")
-    a_mc = st.number_input("Мастер-класс (сопров-е):", min_value=0.0, format="%.2f")
-    a_grotto = st.number_input("Гроты (сопров-е):", min_value=0.0, format="%.2f")
-    a_ferry = st.number_input("Переправа (сопров-е):", min_value=0.0, format="%.2f")
-    a_park_1 = st.number_input("Парк 1 (сопров-е):", min_value=0.0, format="%.2f")
-    a_park_2 = st.number_input("Парк 2 (сопров-е):", min_value=0.0, format="%.2f")
-    a_lunch = st.number_input("Обед (сопров-е):", min_value=0.0, format="%.2f")
+    adults_count = get_number("Кол-во сопровождающих:")
+    a_m1 = get_number("Музей 1 (сопров-е):")
+    a_m2 = get_number("Музей 2 (сопров-е):")
+    a_mc = get_number("Мастер-класс (сопров-е):")
+    a_grotto = get_number("Гроты (сопров-е):")
+    a_ferry = get_number("Переправа (сопров-е):")
+    a_park_1 = get_number("Парк 1 (сопров-е):")
+    a_park_2 = get_number("Парк 2 (сопров-е):")
+    a_lunch = get_number("Обед (сопров-е):")
 
 with tab3:
     st.subheader("Индивидуальные расходы")
-    c_museum_1 = st.number_input("Входной билет музей 1:", min_value=0.0, format="%.2f")
-    c_museum_2 = st.number_input("Входной билет музей 2:", min_value=0.0, format="%.2f")
-    c_park_1 = st.number_input("Входной билет парк 1:", min_value=0.0, format="%.2f")
-    c_park_2 = st.number_input("Входной билет парк 2:", min_value=0.0, format="%.2f")
-    c_fort = st.number_input("Форт:", min_value=0.0, format="%.2f")
-    c_mc = st.number_input("Мастер-класс:", min_value=0.0, format="%.2f")
-    c_grotto = st.number_input("Гроты:", min_value=0.0, format="%.2f")
-    c_lunch = st.number_input("Обед:", min_value=0.0, format="%.2f")
-    c_ferry = st.number_input("Переправа:", min_value=0.0, format="%.2f")
-    c_train = st.number_input("Паровозик:", min_value=0.0, format="%.2f")
+    c_museum_1 = get_number("Входной билет музей 1:")
+    c_museum_2 = get_number("Входной билет музей 2:")
+    c_park_1 = get_number("Входной билет парк 1:")
+    c_park_2 = get_number("Входной билет парк 2:")
+    c_fort = get_number("Форт:")
+    c_mc = get_number("Мастер-класс:")
+    c_grotto = get_number("Гроты:")
+    c_lunch = get_number("Обед:")
+    c_ferry = get_number("Переправа:")
+    c_train = get_number("Паровозик:")
 
 st.divider() # Горизонтальная линия
 
@@ -65,10 +78,10 @@ st.header("ИТОГИ")
 st.info(f"**Общие расходы (до деления):** {total_shared_cost:.2f} руб.")
 
 groups = [20, 25, 30, 35, 40, 45]
-# На телефоне колонки автоматически выстроятся друг под другом, а на ПК будут в 2 ряда
 cols = st.columns(2)
 
 for i, g in enumerate(groups):
+    # Расчет производим, только если введено хоть какое-то количество детей, чтобы избежать ошибок деления на 0
     price = (total_shared_cost / g) + child_personal_cost if g > 0 else 0
     with cols[i % 2]:
         st.success(f"**Группа {g} детей:**\n\n{price:.2f} руб.")
