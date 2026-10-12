@@ -3,10 +3,17 @@ import streamlit as st
 # Настройка страницы
 st.set_page_config(page_title="Калькулятор экскурсии", page_icon="🚌", layout="centered")
 
-# === CSS ХАК ДЛЯ СКРЫТИЯ КНОПОК + И - ===
-# Этот код заставит браузеры скрыть кнопки изменения чисел, оставив только чистое поле
+# === УЛУЧШЕННЫЙ CSS ХАК ===
 st.markdown("""
     <style>
+    /* 1. Скрываем кастомные кнопки + и - от самого Streamlit */
+    [data-testid="stNumberInputStepUp"] {
+        display: none !important;
+    }
+    [data-testid="stNumberInputStepDown"] {
+        display: none !important;
+    }
+    /* 2. Скрываем системные кнопки браузеров (для полной чистоты) */
     input[type="number"]::-webkit-outer-spin-button,
     input[type="number"]::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -41,9 +48,8 @@ def clear_all():
 # Выводим кнопку сброса на самом видном месте
 st.button("🗑️ Очистить все поля", on_click=clear_all, type="primary")
 
-# Умная функция ввода: теперь это number_input для вызова цифровой клавиатуры на телефоне!
+# Умная функция ввода с цифровой клавиатурой
 def get_number(label, key):
-    # min_value=0.0 указывает, что это положительные числа
     val = st.number_input(label, value=None, min_value=0.0, key=key)
     return float(val) if val is not None else 0.0
 
