@@ -3,9 +3,24 @@ import streamlit as st
 # Настройка страницы
 st.set_page_config(page_title="Калькулятор экскурсии", page_icon="🚌", layout="centered")
 
+# === CSS ХАК ДЛЯ СКРЫТИЯ КНОПОК + И - ===
+# Этот код заставит браузеры скрыть кнопки изменения чисел, оставив только чистое поле
+st.markdown("""
+    <style>
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 st.title("🚌 Расчет экскурсии")
 
-# Список всех ключей для полей (нужно для функции полного сброса)
+# Список всех ключей для полей
 field_keys = [
     "bus", "suburb", "quest", "add_exp_1", "add_exp_2", "add_exp_3",
     "group_count", "exc_m1", "exc_m2", "exc_park",
@@ -13,31 +28,26 @@ field_keys = [
     "c_museum_1", "c_museum_2", "c_park_1", "c_park_2", "c_fort", "c_mc", "c_grotto", "c_lunch", "c_ferry", "c_train"
 ]
 
-# Инициализация пустых значений при первом запуске (чтобы ячейки были чистыми)
+# Инициализация (None означает, что поле будет идеально пустым)
 for key in field_keys:
     if key not in st.session_state:
-        st.session_state[key] = ""
+        st.session_state[key] = None
 
-# Функция мгновенного сброса всех полей
+# Функция мгновенного сброса
 def clear_all():
     for key in field_keys:
-        st.session_state[key] = ""
+        st.session_state[key] = None
 
 # Выводим кнопку сброса на самом видном месте
 st.button("🗑️ Очистить все поля", on_click=clear_all, type="primary")
 
-# Умная функция ввода теперь принимает уникальный `key` для привязки к кнопке сброса
+# Умная функция ввода: теперь это number_input для вызова цифровой клавиатуры на телефоне!
 def get_number(label, key):
-    val = st.text_input(label, key=key, placeholder=" ")
-    if val:
-        try:
-            return float(val.replace(',', '.').replace(' ', ''))
-        except ValueError:
-            st.error(f"Пожалуйста, введите число в поле '{label}'")
-            return 0.0
-    return 0.0
+    # min_value=0.0 указывает, что это положительные числа
+    val = st.number_input(label, value=None, min_value=0.0, key=key)
+    return float(val) if val is not None else 0.0
 
-# Вкладки
+# === Вкладки ===
 tab1, tab2, tab3 = st.tabs(["Общие расходы", "Сопровождающие", "На ребенка"])
 
 with tab1:
